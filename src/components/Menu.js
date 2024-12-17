@@ -25,7 +25,7 @@ const Menu = ({ navigation }) => {
             <Icon name="bell" size={24} color="#ffd700" style={styles.icon} />
           </TouchableOpacity>
           <TouchableOpacity>
-            <Icon name="cog" size={24} color="#fff" />
+            <Icon name="map" size={24} color="#fff" />
           </TouchableOpacity>
         </View>
       </View>
