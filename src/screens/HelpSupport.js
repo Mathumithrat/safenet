@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Alert, Modal, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Alert, Modal, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import { RadioButton } from 'react-native-paper';
 
 const HelpSupport = () => {
@@ -9,14 +9,12 @@ const HelpSupport = () => {
   const [contact, setContact] = useState('');
   const [message, setMessage] = useState('');
 
-  // Handle form submission
   const handleSubmit = () => {
     if (!helpType || !contact) {
       Alert.alert('Error', 'Please fill in all required fields');
       return;
     }
 
-    // Log the submitted data
     console.log({
       helpType,
       contact,
@@ -24,141 +22,124 @@ const HelpSupport = () => {
       message,
     });
 
-    // Show success alert and close modal
     Alert.alert('Success', 'Your request for help has been submitted!');
     setModalVisible(false);
+    setHelpType('');
+    setDescription('');
+    setContact('');
+    setMessage('');
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Help and Support</Text>
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <View style={styles.container}>
+        <Text style={styles.header}>Help and Support</Text>
 
-      {/* Radio Buttons for Help Type */}
-      <View style={styles.radioGroup}>
-        <Text style={styles.formLabel}>Select Help Type</Text>
-        <View style={styles.radioOption}>
-          <RadioButton
-            value="Emergency"
-            status={helpType === 'Emergency' ? 'checked' : 'unchecked'}
-            onPress={() => setHelpType('Emergency')}
-          />
-          <Text style={styles.radioText}>Emergency</Text>
+        {/* Radio Buttons for Help Type */}
+        <View style={styles.radioGroup}>
+          <Text style={styles.formLabel}>Select Help Type</Text>
+          {['Emergency', 'Medical Assistance', 'Legal Help', 'Other'].map((option) => (
+            <View style={styles.radioOption} key={option}>
+              <RadioButton
+                value={option}
+                status={helpType === option ? 'checked' : 'unchecked'}
+                onPress={() => setHelpType(option)}
+                color="#FF0000"
+              />
+              <Text style={styles.radioText}>{option}</Text>
+            </View>
+          ))}
         </View>
-        <View style={styles.radioOption}>
-          <RadioButton
-            value="Medical Assistance"
-            status={helpType === 'Medical Assistance' ? 'checked' : 'unchecked'}
-            onPress={() => setHelpType('Medical Assistance')}
-          />
-          <Text style={styles.radioText}>Medical Assistance</Text>
-        </View>
-        <View style={styles.radioOption}>
-          <RadioButton
-            value="Legal Help"
-            status={helpType === 'Legal Help' ? 'checked' : 'unchecked'}
-            onPress={() => setHelpType('Legal Help')}
-          />
-          <Text style={styles.radioText}>Legal Help</Text>
-        </View>
-        <View style={styles.radioOption}>
-          <RadioButton
-            value="Other"
-            status={helpType === 'Other' ? 'checked' : 'unchecked'}
-            onPress={() => setHelpType('Other')}
-          />
-          <Text style={styles.radioText}>Other</Text>
-        </View>
-      </View>
 
-      {/* Button to trigger Modal for Description */}
-      <TouchableOpacity style={styles.redButton} onPress={() => setModalVisible(true)}>
-        <Text style={styles.buttonText}>Add Description</Text>
-      </TouchableOpacity>
+        {/* Button to trigger Modal */}
+        <TouchableOpacity style={styles.primaryButton} onPress={() => setModalVisible(true)}>
+          <Text style={styles.buttonText}>Add Description</Text>
+        </TouchableOpacity>
 
-      {/* Modal for Description and Additional Message */}
-      <Modal
-        animationType="slide"
-        transparent={false}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={styles.modalView}>
-          <Text style={styles.modalText}>Describe the Issue</Text>
-          
-          {/* Description TextInput */}
-          <TextInput
-            style={[styles.input, styles.descriptionInput, { color: '#fff' }]}
-            placeholder="Please describe your situation"
-            placeholderTextColor="#ccc"
-            multiline
-            value={description}
-            onChangeText={setDescription}
-          />
+        {/* Modal for Description */}
+        <Modal animationType="slide" transparent={false} visible={modalVisible} onRequestClose={() => setModalVisible(false)}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalHeader}>Describe the Issue</Text>
 
-          <Text style={styles.modalText}>Contact Information</Text>
+            {/* Description */}
+            <TextInput
+              style={[styles.input, styles.descriptionInput]}
+              placeholder="Please describe your situation"
+              placeholderTextColor="#ccc"
+              multiline
+              value={description}
+              onChangeText={setDescription}
+            />
 
-          {/* Contact TextInput */}
-          <TextInput
-            style={[styles.input, { color: '#fff' }]}
-            placeholder="Enter your contact number"
-            placeholderTextColor="#ccc"
-            value={contact}
-            onChangeText={setContact}
-          />
+            {/* Contact Information */}
+            <Text style={styles.modalHeader}>Contact Information</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter your contact number"
+              placeholderTextColor="#ccc"
+              value={contact}
+              onChangeText={setContact}
+            />
 
-          <Text style={styles.modalText}>Additional Message</Text>
+            {/* Additional Message */}
+            <Text style={styles.modalHeader}>Additional Message</Text>
+            <TextInput
+              style={[styles.input, styles.descriptionInput]}
+              placeholder="Add any additional details or message"
+              placeholderTextColor="#ccc"
+              multiline
+              value={message}
+              onChangeText={setMessage}
+            />
 
-          {/* Message TextInput */}
-          <TextInput
-            style={[styles.input, styles.descriptionInput, { color: '#fff' }]}
-            placeholder="Add any additional details or message"
-            placeholderTextColor="#ccc"
-            multiline
-            value={message}
-            onChangeText={setMessage}
-          />
-
-          {/* Red Submit and Cancel Buttons */}
-          <View style={styles.modalButtonContainer}>
-            <TouchableOpacity style={styles.modalRedButton} onPress={handleSubmit}>
-              <Text style={styles.modalButtonText}>Submit</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.modalRedButton} onPress={() => setModalVisible(false)}>
-              <Text style={styles.modalButtonText}>Cancel</Text>
-            </TouchableOpacity>
+            {/* Modal Buttons */}
+            <View style={styles.modalButtonContainer}>
+              <TouchableOpacity style={styles.modalPrimaryButton} onPress={handleSubmit}>
+                <Text style={styles.modalButtonText}>Submit</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.modalSecondaryButton} onPress={() => setModalVisible(false)}>
+                <Text style={styles.modalButtonText}>Cancel</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
 
-      {/* Submit Request Button */}
-      <TouchableOpacity style={styles.redButton} onPress={handleSubmit}>
-        <Text style={styles.buttonText}>Submit Request</Text>
-      </TouchableOpacity>
-    </View>
+        {/* Submit Request Button */}
+        <TouchableOpacity style={styles.primaryButton} onPress={handleSubmit}>
+          <Text style={styles.buttonText}>Submit Request</Text>
+        </TouchableOpacity>
+      </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  scrollContainer: {
+    flexGrow: 1,
+    backgroundColor: '#f5f5f5',
+    paddingVertical: 20,
+  },
   container: {
     flex: 1,
     padding: 20,
     backgroundColor: '#f5f5f5',
   },
   header: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: '#333',
+    color: '#FF0000',
     textAlign: 'center',
   },
   formLabel: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 5,
-    color: '#8B0000',
+    marginBottom: 10,
+    color: '#333',
   },
   radioGroup: {
     marginBottom: 20,
+    paddingHorizontal: 10,
   },
   radioOption: {
     flexDirection: 'row',
@@ -167,61 +148,73 @@ const styles = StyleSheet.create({
   },
   radioText: {
     fontSize: 16,
-    color: '#333',
+    color: '#555',
   },
-  redButton: {
-    backgroundColor: '#FF0000',  // Red color for the "Submit Request" and "Add Description" buttons
-    padding: 10,
+  primaryButton: {
+    backgroundColor: '#FF0000',
+    padding: 15,
     marginBottom: 20,
-    borderRadius: 5,
+    borderRadius: 8,
     alignItems: 'center',
   },
   buttonText: {
     color: '#fff',
-    textAlign: 'center',
-    fontSize: 16,
+    fontSize: 18,
+    fontWeight: 'bold',
   },
   modalView: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#000',  // Set a solid black background
+    backgroundColor: '#000',
     padding: 20,
   },
-  modalText: {
-    fontSize: 18,
+  modalHeader: {
+    fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 10,
     color: '#fff',
+    marginBottom: 10,
+    alignSelf: 'flex-start',
   },
   input: {
+    width: '100%',
     borderWidth: 1,
-    padding: 10,
-    marginBottom: 10,
-    borderRadius: 5,
     borderColor: '#ccc',
-    width: 300,
+    padding: 10,
+    marginBottom: 15,
+    borderRadius: 8,
+    backgroundColor: '#333',
+    color: '#fff',
+    fontSize: 16,
   },
   descriptionInput: {
-    height: 100,
+    height: 120,
     textAlignVertical: 'top',
   },
   modalButtonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: '80%',
     marginTop: 20,
+    width: '100%',
   },
-  modalRedButton: {
-    backgroundColor: '#FF0000',  // Red color for modal buttons
-    padding: 10,
-    borderRadius: 5,
-    width: '45%',
+  modalPrimaryButton: {
+    backgroundColor: '#FF0000',
+    padding: 12,
+    borderRadius: 8,
     alignItems: 'center',
+    width: '48%',
+  },
+  modalSecondaryButton: {
+    backgroundColor: '#555',
+    padding: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+    width: '48%',
   },
   modalButtonText: {
     color: '#fff',
     fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

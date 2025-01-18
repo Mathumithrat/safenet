@@ -1,23 +1,16 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 
 const IncidentReport = () => {
-  // State to hold the incident report details
   const [incidentDetails, setIncidentDetails] = useState({
     location: '',
     description: '',
     date: '',
   });
 
-  // Function to handle form submission
   const handleSubmit = () => {
-    // Display the form data in the console (you can handle this as needed)
     console.log('Incident Report:', incidentDetails);
-
-    // Display alert message
     Alert.alert('Success', 'The incident has been reported');
-
-    // Optionally, clear the form after submission
     setIncidentDetails({ location: '', description: '', date: '' });
   };
 
@@ -60,7 +53,17 @@ const IncidentReport = () => {
       </View>
 
       {/* Submit Button */}
-      <Button title="Submit Report" onPress={handleSubmit} color="red" />
+      <TouchableOpacity
+        style={styles.submitButton}
+        onPress={handleSubmit}
+        disabled={
+          !incidentDetails.location.trim() ||
+          !incidentDetails.description.trim() ||
+          !incidentDetails.date.trim()
+        }
+      >
+        <Text style={styles.submitButtonText}>Submit Report</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -73,31 +76,60 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
   },
   header: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
-    marginBottom: 20,
-    color: '#333',
+    marginBottom: 30,
+    color: '#8B0000',
     textAlign: 'center',
+    textTransform: 'uppercase',
   },
   formGroup: {
-    marginBottom: 20,
+    marginBottom: 25,
+    padding: 15,
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 5,
   },
   formLabel: {
     fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 5,
-    color: '#8B0000',
+    fontWeight: '600',
+    marginBottom: 10,
+    color: '#333',
   },
   input: {
     borderWidth: 1,
-    padding: 10,
-    marginBottom: 10,
-    borderRadius: 5,
-    borderColor: '#ccc',
+    padding: 12,
+    borderRadius: 8,
+    borderColor: '#ddd',
+    backgroundColor: '#f9f9f9',
+    fontSize: 14,
   },
   descriptionInput: {
-    height: 100, // For a larger text box for descriptions
-    textAlignVertical: 'top', // For multiline input
+    height: 100,
+    textAlignVertical: 'top',
+  },
+  submitButton: {
+    backgroundColor: '#8B0000',
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 8,
+  },
+  submitButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+    textTransform: 'uppercase',
   },
 });
 
